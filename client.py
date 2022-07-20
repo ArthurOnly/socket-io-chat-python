@@ -1,4 +1,12 @@
 import socketio
+import sys
+
+def delete_last_line():
+    "Deletes the last line in the STDOUT"
+    # cursor up one line
+    sys.stdout.write('\x1b[1A')
+    # delete last line
+    sys.stdout.write('\x1b[2K')
 
 username = input('Nome de usuario: ')
 room = input('Sala: ')
@@ -16,4 +24,5 @@ def send(msg):
 
 while True:
     msg = input()
+    delete_last_line()
     send(msg)
