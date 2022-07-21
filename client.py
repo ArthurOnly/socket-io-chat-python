@@ -12,7 +12,7 @@ username = input('Nome de usuario: ')
 room = input('Sala: ')
 
 sio = socketio.Client()
-sio.connect('http://10.25.2.65:5000')
+sio.connect('http://10.25.2.54:5000')
 sio.emit('join', {'username': username, 'room': room})
 
 @sio.on('msg')
