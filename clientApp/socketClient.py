@@ -6,10 +6,8 @@ class SocketClient:
     socket = None
 
     def __init__(self):
-        #self.username = input('Nome de usuario: ')
-        #self.room = input('Sala: ')
-        self.username = 'Arthur'
-        self.room = 1
+        self.username = input('Nome de usuario: ')
+        self.room = input('Sala: ')
         self.socket = socketio.Client()
 
     def start(self):

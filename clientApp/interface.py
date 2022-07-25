@@ -1,4 +1,4 @@
-from tkinter import Tk, Text, Label, Button, Frame
+from tkinter import Tk, Text, Label, Button, Frame, Scrollbar, VERTICAL
 from socketClient import SocketClient
 import threading
 import sys
@@ -20,9 +20,14 @@ class Interface:
         self._username = socket.username
         self._room = socket.room
 
-        ChatBox = Label(interface, bg="#eee")
-        ChatBox.pack(fill='both', expand=1)
+        #chat container
+        chat_container = Frame(interface, height=60)
+        chat_container.pack(fill='x', expand=1)
+
+        ChatBox = Label(chat_container, bg="#eee", justify='left', anchor='sw', padx=16, font=("Arial", 18), height=20)
+        ChatBox.pack(fill='x', expand=1)
         self._chat_box = ChatBox
+        #end chat container
 
         input_container = Frame(interface)
         input_container.pack(fill='x')
@@ -36,6 +41,7 @@ class Interface:
 
         self._interface = interface
         threading.Thread(target=self.start_listening).start()
+        interface.bind("<KeyPress>", self.press_enter)
 
     def start(self):
         self._interface.mainloop()
@@ -50,6 +56,14 @@ class Interface:
         msgs = msgs+'\n'+message
         self._chat_box.config(text=msgs)
 
-    def button_click(self):
+    def button_click(self, remove_last = False):
         msg = self._text_input.get(1.0, "end-1c")
-        self._socket_client.socket.emit('msg', {'msg': msg, 'room': 1, 'author': 'Arthur'})
+        if remove_last:
+            msg = msg.rstrip(msg[-1])
+        if msg:
+            self._socket_client.socket.emit('msg', {'msg': msg, 'room': self._socket_client.room, 'author': self._socket_client.username})
+            self._text_input.delete(1.0, "end-1c")
+
+    def press_enter(self, key):
+        if key.keycode == 13:
+            self.button_click(True)
